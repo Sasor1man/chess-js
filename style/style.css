@@ -1,0 +1,127 @@
+:root {
+  --cc-dark-grey: #21201d;
+  --cc-grey: #262522;
+  --cc-light-grey: #302e2b;
+  --cc-black: #141413;
+  --cc-white: #e3e2e2;
+}
+
+.montserrat-main {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+body {
+  background-color: var(--cc-light-grey);
+  display: grid;
+  grid-template-columns: 14.5rem 1fr 1fr;
+}
+
+.gap {
+  width: 50px;
+}
+
+.board-layout-nav {
+  background-color: var(--cc-grey);
+}
+.board-layout-nav > .nav-component {
+  width: 14.5rem;
+  height: 100vh;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .chess-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+  padding-left: 1.1rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .chess-logo > .nav-link-img {
+  background-image: url(https://www.chess.com/bundles/web/images/sprites/navsprite.fe042891.png);
+  background-size: 15.4rem 180.4rem;
+  background-position: -2.3rem 0;
+  height: 3.7rem;
+  width: 12rem;
+  content: "";
+  display: block;
+  flex-shrink: 0;
+  margin-inline-end: 1rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .nav-link-play > .nav-play-img {
+  background-position: -2.1rem -7.8rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .nav-link-puzzels > .nav-play-img {
+  background-position: -2.3rem -11.4rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .nav-link-top-level {
+  color: var(--cc-white);
+  min-height: 4.5rem;
+  padding: 0.8rem 0 0.8rem 1rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .nav-link-top-level > .nav-play-img {
+  height: 3rem;
+  width: 3rem;
+}
+.board-layout-nav > .nav-component > .nav-top-menu > .nav-link-main-design {
+  font-size: var(--sidebarFontOverride, 1.6rem);
+  font-weight: 700;
+}
+.board-layout-nav > .nav-component > .nav-top-menu .nav-link-component {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  min-height: 4rem;
+  min-width: 4rem;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+.board-layout-nav > .nav-component > .nav-top-menu .nav-link-component:hover {
+  background-color: var(--cc-black);
+}
+.board-layout-nav > .nav-component > .nav-top-menu .nav-text {
+  color: var(--cc-white);
+  display: inline-block;
+  line-height: 1.1;
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+.board-layout-nav > .nav-component > .nav-top-menu .nav-img {
+  background-image: url(https://www.chess.com/bundles/web/images/sprites/navsprite.fe042891.png);
+  background-size: 15.4rem 180.4rem;
+  content: "";
+  display: block;
+  flex-shrink: 0;
+  height: 2.2rem;
+  margin-inline-end: 1rem;
+  width: 2.2rem;
+}
+
+.board {
+  height: 1184px;
+  width: 1184px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+.board > .black {
+  background-color: #739552;
+}
+.board > .white {
+  background-color: #ebecd0;
+}/*# sourceMappingURL=style.css.map */
