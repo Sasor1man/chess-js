@@ -4,6 +4,26 @@
     --cc-light-grey: #302e2b;
     --cc-black: #141413;
     --cc-white: #e3e2e2;
+    --color-neutrals-white: #fff;
+    --color-transparent-black-30: rgba(0, 0, 0, 0.3);
+    --color-transparent-white-72: hsla(0, 0%, 100%, 0.72);
+    --color-transparent-white-8: hsla(0, 0%, 100%, 0.08);
+    --color-transparent-white-50: hsla(0, 0%, 100%, 0.5);
+    --borderColor: hsla(0, 0%, 100%, 0.1);
+    --borderFocus: hsla(0, 0%, 100%, 0.3);
+    --bgColor: hsla(0, 0%, 100%, 0.1);
+    --textColor: hsla(0, 0%, 100%, 0.72);
+    --secondaryTextColor: hsla(0, 0%, 100%, 0.5);
+    --icon-m: 2.4rem;
+    --gutter: 1.6rem;
+    --navWidth: 14.5rem;
+    --verticalNavWidth: var(--navWidth, 14.5rem);
+    --gutterBoardToNav: 1.2rem;
+    --sidebarMaxWidth: 50rem;
+    --sidebarMinHeight: 50rem;
+    --sidebarMinWidth: 30rem;
+    --color-bg-subtler: var(--color-transparent-white-8);
+    --radius-m: 0.3rem;
 }
 
 // <uniquifier>: Use a unique and descriptive class name
@@ -38,19 +58,44 @@ button {
 
 body {
     background-color: var(--cc-light-grey);
-    display: grid;
-    grid-template-columns: 14.5rem 1fr 1fr;
+}
+
+form {
+    display: block;
+    margin-top: 0em;
+    unicode-bidi: isolate;
 }
 
 .gap {
     width: 50px;
 }
 
+.content {
+    height: 100vh;
+    width: 100vw;
+    // padding: var(--boardOffsetTop) var(--gutter) var(--gutter) calc(var(--verticalNavWidth) + var(--gutterBoardToNav));
+    display: grid;
+    grid-template-columns: var(--navWidth) 1fr;
+    grid-template-rows: 1fr;
+}
+
 .board-layout-nav {
     background-color: var(--cc-grey);
+    left: 0;
+    position: relative;
+    right: 0;
+    top: 0;
+    z-index: 2001;
+    // @media (min-width: 60em) {
+    //     position: fixed;
+    //     right: unset;
+    // }
+
     & > .nav-component {
         width: 14.5rem;
         height: 100vh;
+        align-content: space-between;
+        display: grid;
         & > .nav-top-menu {
             & > .chess-logo {
                 display: flex;
@@ -80,12 +125,46 @@ body {
                     background-position: -2.3rem -11.4rem;
                 }
             }
+            & > .nav-link-learn {
+                & > .nav-learn-img {
+                    background-position: -2.3rem -15.15rem;
+                }
+            }
+            & > .nav-link-watch {
+                & > .nav-watch-img {
+                    background-position: -2.3rem -18.75rem;
+                }
+            }
+            & > .nav-link-news {
+                & > .nav-news-img {
+                    background-position: -2.3rem -33.75rem;
+                }
+            }
+            & > .nav-link-social {
+                & > .nav-social-img {
+                    background-position: -2.3rem -22.65rem;
+                }
+            }
+            & > .more-top {
+                & > .nav-more-img {
+                    background-position: -2.3rem -26.25rem;
+                }
+            }
+            & > .nav-link-button {
+                background-color: transparent;
+                border: none;
+                font-size: inherit;
+                font-weight: inherit;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
 
             & > .nav-link-top-level {
                 color: var(--cc-white);
                 min-height: 4.5rem;
                 padding: 0.8rem 0 0.8rem 1rem;
-                & > .nav-play-img {
+                & > .nav-img {
                     height: 3rem;
                     width: 3rem;
                 }
@@ -108,13 +187,7 @@ body {
                     background-color: var(--cc-black);
                 }
             }
-            .nav-text {
-                color: var(--cc-white);
-                display: inline-block;
-                line-height: 1.1;
-                margin-right: 0.5rem;
-                font-weight: 700;
-            }
+
             .nav-img {
                 background-image: url(https://www.chess.com/bundles/web/images/sprites/navsprite.fe042891.png);
                 background-size: 15.4rem 180.4rem;
@@ -125,22 +198,171 @@ body {
                 margin-inline-end: 1rem;
                 width: 2.2rem;
             }
+
+            .nav-serch-form {
+                display: flex;
+                margin: 0.8rem 1rem 2rem 1rem;
+            }
+        }
+        .nav-text {
+            color: var(--cc-white);
+            display: inline-block;
+            line-height: 1.1;
+            margin-right: 0.5rem;
+            font-weight: 700;
+        }
+        .autocomplete-component {
+            position: relative;
+            width: 100%;
+        }
+        .autocomplete-input-group {
+            position: relative;
+        }
+        .ui_v5-input-group-component {
+            align-items: center;
+            display: flex;
+            position: relative;
+        }
+        .ui_v5-input-component {
+            background-color: var(--cc-light-grey);
+            border: 0.1rem solid var(--borderColor);
+            border-radius: 0.3rem;
+            height: 3.2rem;
+            line-height: 1;
+            padding: 0.4rem 0.8rem;
+            position: relative;
+            width: 100%;
+        }
+        .nav-menu-area {
+            display: flex;
+            flex-direction: column;
+            &:last-of-type {
+                color: var(--color-transparent-white-50);
+                font-size: 1.3rem;
+                margin: auto 0 2.5rem;
+                position: relative;
+            }
+        }
+        .nav-action {
+            align-items: center;
+            background-color: transparent;
+            border: none;
+            color: inherit;
+            display: flex;
+            font-size: 1.3rem;
+            font-weight: 600;
+            gap: 0.8rem;
+            height: 3.2rem;
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+            padding-left: 1.2rem;
+            position: relative;
+            text-align: left;
+        }
+        .cc-icon-glyph {
+            align-content: center;
+            display: grid;
+            justify-content: center;
+        }
+        .cc-icon-medium {
+            font-size: var(--icon-m);
+        }
+        .cc-icon-medium.cc-icon-glyph {
+            height: var(--icon-m);
+            width: var(--icon-m);
+        }
+        svg {
+            color: var(--color-transparent-white-50);
         }
     }
 }
 
-.app {
-}
-.board {
-    height: 1184px;
-    width: 1184px;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    & > .black {
-        background-color: #739552;
+.board-layout-main {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    position: relative;
+    width: min-content;
+    align-self: center;
+    .board {
+        height: 1184px;
+        width: 1184px;
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        & > .black {
+            background-color: #739552;
+        }
+        & > .white {
+            background-color: #ebecd0;
+        }
     }
-    & > .white {
-        background-color: #ebecd0;
+    .board-layout-player {
+        flex-shrink: 0;
+        height: var(--playerHeight);
+        margin: 0 var(--boardControlsWidth) 0 auto;
+        position: relative;
+        width: var(--boardWidth);
+        @media (min-width: 60em) {
+            .board-layout-player {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .player-row-component {
+        display: flex;
+        height: 100%;
+        justify-content: space-between;
+        margin: auto;
+        max-width: 100%;
+        position: relative;
+    }
+    .player-row-container {
+        display: block;
+    }
+    .player-row-wrapper {
+        color: var(--color-neutrals-white);
+        display: flex;
+        height: 100%;
+        text-shadow: 0.1rem 0.1rem var(--color-transparent-black-30);
+    }
+    .cc-user-block-component {
+        align-items: center;
+        display: inline-flex;
+        flex-direction: row;
+        gap: var(--space-75);
+        overflow: hidden;
+    }
+    .cc-user-username-white {
+        color: var(--color-neutrals-white);
+    }
+    .cc-user-username-component {
+        background-color: transparent;
+        border: none;
+        margin: 0;
+        max-width: 30rem;
+        overflow: hidden;
+        padding: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .cc-user-rating-white {
+        color: var(--color-transparent-white-72);
+    }
+    .player-row-avatar.player-row-with-avatar-background {
+        background-color: var(--color-bg-subtler);
+    }
+    .player-row-avatar {
+        border-radius: var(--radius-m);
+        flex-shrink: 0;
+        margin-right: 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .avatar-component {
+        -o-object-fit: cover;
+        object-fit: cover;
     }
 }
