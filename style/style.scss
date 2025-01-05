@@ -6,9 +6,15 @@
     --cc-white: #e3e2e2;
     --color-neutrals-white: #fff;
     --color-transparent-black-30: rgba(0, 0, 0, 0.3);
+    --color-transparent-black-20: rgba(0, 0, 0, 0.2);
+    --color-transparent-black-14: rgba(0, 0, 0, 0.14);
+    --color-transparent-black-10: rgba(0, 0, 0, 0.1);
     --color-transparent-white-72: hsla(0, 0%, 100%, 0.72);
     --color-transparent-white-8: hsla(0, 0%, 100%, 0.08);
     --color-transparent-white-50: hsla(0, 0%, 100%, 0.5);
+    --color-transparent-white-85: hsla(0, 0%, 100%, 0.85);
+    --color-transparent-white-10: hsla(0, 0%, 100%, 0.1);
+    --color-transparent-white-14: hsla(0, 0%, 100%, 0.14);
     --borderColor: hsla(0, 0%, 100%, 0.1);
     --borderFocus: hsla(0, 0%, 100%, 0.3);
     --bgColor: hsla(0, 0%, 100%, 0.1);
@@ -24,6 +30,26 @@
     --sidebarMinWidth: 30rem;
     --color-bg-subtler: var(--color-transparent-white-8);
     --radius-m: 0.3rem;
+    --color-bg-secondary: var(--color-transparent-black-20);
+    --space-200: 1.2rem;
+    --space-300: 1.3rem;
+    --space-400: 1.4rem;
+    --space-75: 0.4rem;
+    --color-bg-tertiary: var(--color-transparent-black-14);
+    --color-text-bolder: var(--color-transparent-white-85);
+    --color-text-boldest: var(--color-neutrals-white);
+    --font-family-heading: "Montserrat", sans-serif;
+    --color-border-default: var(--color-transparent-white-10);
+    --color-text-subtle: var(--color-transparent-white-50);
+    --color-bg-subtle: var(--color-transparent-white-10);
+    --color-bg-subtle-hovered: var(--color-transparent-white-14);
+    --color-text-default: var(--color-transparent-white-72);
+    --color-text-default-hovered: var(--color-transparent-white-85);
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
 }
 
 // <uniquifier>: Use a unique and descriptive class name
@@ -48,7 +74,7 @@ a {
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+    box-sizing: inherit;
 }
 
 a,
@@ -66,23 +92,102 @@ form {
     unicode-bidi: isolate;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2.4rem;
+}
+
 .gap {
     width: 50px;
+}
+.cc-button-large {
+    --buttonHeight: 4.8rem;
+    --buttonPaddings: 0.4rem 2rem;
+    --columnGap: 0.8rem;
+    --fontSize: 1.6rem;
+}
+
+.cc-button-secondary {
+    --bgColor: var(--color-bg-subtle);
+    --bgColorHover: var(--color-bg-subtle-hovered);
+    --borderBottomLine: var(--color-transparent-black-10);
+    --borderBottomLineHover: var(--color-transparent-black-14);
+    --innerBoxShadow: rgba(0, 0, 0, 0.04);
+    --outlineBoxShadow: var(--color-transparent-white-8);
+    --textColor: var(--color-text-default);
+    --textColorHover: var(--color-text-default-hovered);
+    --buttonTextShadow: transparent;
+}
+
+.cc-button-component {
+    --buttonBoxShadow: inset 0 -0.4rem 2.4rem transparent,
+        inset 0 calc(var(--borderHeight, 0.1rem) * -1) 0 0 var(--borderBottomLine);
+    --buttonBoxShadowHover: inset 0 -0.4rem 2.4rem var(--innerBoxShadow),
+        inset 0 calc(var(--borderHeight, 0.1rem) * -1) 0 0 var(--borderBottomLineHover);
+    --textColor: var(--color-neutrals-white);
+    --textColorHover: var(--color-neutrals-white);
+    --iconColor: var(--textColor);
+    --iconColorHover: var(--textColorHover);
+    align-items: center;
+    background-color: var(--bgColor);
+    border: 0;
+    border-radius: var(--borderRadius, 0.5rem);
+    box-shadow: var(--buttonBoxShadow);
+    color: var(--textColor);
+    -moz-column-gap: var(--columnGap);
+    column-gap: var(--columnGap);
+    cursor: pointer;
+    display: inline-grid;
+    font-size: var(--fontSize);
+    font-weight: var(--fontWeight, 600);
+    grid-auto-flow: column;
+    justify-content: center;
+    line-height: 1.1428;
+    max-width: 100%;
+    min-height: var(--buttonHeight);
+    overflow: hidden;
+    padding: var(--buttonPaddings);
+    text-align: center;
+    text-shadow:
+        0 0.1rem 0 var(--buttonTextShadow, rgba(0, 0, 0, 0.2)),
+        0 0.3rem 1.6rem rgba(0, 0, 0, 0.05);
+    touch-action: manipulation;
+    transition-duration: 0.1s;
+    transition-property: box-shadow, background-color, color;
+    transition-timing-function: ease-out;
+    word-break: break-word;
 }
 
 .content {
     height: 100vh;
     width: 100vw;
-    // padding: var(--boardOffsetTop) var(--gutter) var(--gutter) calc(var(--verticalNavWidth) + var(--gutterBoardToNav));
+    padding: var(--boardOffsetTop) var(--gutter) var(--gutter) calc(var(--verticalNavWidth) + var(--gutterBoardToNav))
+        1fr;
     display: grid;
-    grid-template-columns: var(--navWidth) 1fr;
-    grid-template-rows: 1fr;
+    // grid-template-columns: var(--navWidth) 1fr;
+    grid-template-columns: [left-gutter] var(--navWidth) [board-layout] min-content [sidebar] minmax(
+            var(--sidebarMinWidth),
+            var(--sidebarMaxWidth)
+        );
+    grid-template-rows: [top] var(--boardRowHeight) [bottom] auto;
+    gap: 50px;
+    // grid-template-rows: 1fr;
 }
 
 .board-layout-nav {
     background-color: var(--cc-grey);
     left: 0;
-    position: relative;
+    // position: absolute;
     right: 0;
     top: 0;
     z-index: 2001;
@@ -92,7 +197,7 @@ form {
     // }
 
     & > .nav-component {
-        width: 14.5rem;
+        width: var(--navWidth);
         height: 100vh;
         align-content: space-between;
         display: grid;
@@ -364,5 +469,226 @@ form {
     .avatar-component {
         -o-object-fit: cover;
         object-fit: cover;
+    }
+}
+
+.board-layout-sidebar {
+    display: flex;
+    flex: 1;
+    flex-basis: 0%;
+    flex-direction: column;
+    margin-top: var(--gutter);
+    min-height: var(--sidebarMinHeight);
+    width: 100%;
+    .sidebar-controller-container {
+        background: var(--color-bg-secondary);
+        clip-path: inset(0 round 0.5rem);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+    .cc-sidebar-header-component {
+        --cc-header-button-width: calc(var(--space-200) * 2 + var(--icon-m));
+        background-color: var(--color-bg-tertiary);
+        color: var(--color-text-bolder);
+        display: flex;
+        flex-shrink: 0;
+        height: 4.8rem;
+    }
+    .cc-sidebar-header-header-center {
+        align-items: center;
+        display: flex;
+        gap: var(--space-200);
+        justify-content: center;
+        padding: 0 var(--space-300);
+    }
+    .cc-sidebar-header-header-center:first-child:last-child {
+        min-width: 100%;
+    }
+    .cc-sidebar-header-feature-icon {
+        --cc-feature-icon-size: var(--icon-m);
+        flex-shrink: 0;
+        height: var(--cc-feature-icon-size);
+        width: var(--cc-feature-icon-size);
+    }
+    .cc-icon-img {
+        display: block;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+    .cc-sidebar-header-title.cc-sidebar-header-secondary {
+        color: var(--color-text-boldest);
+        font-weight: 700;
+    }
+    .cc-sidebar-header-heading-xx-small,
+    .cc-sidebar-header-heading-xx-small-bold,
+    .cc-sidebar-header-title.cc-sidebar-header-secondary {
+        font-family: var(--font-family-heading);
+        font-size: 1.7rem;
+        line-height: 1.1764705882;
+    }
+    .cc-sidebar-header-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .sidebar-controller-component {
+        color: var(--color-text-bolder);
+        container-name: sidebar;
+        container-type: inline-size;
+        height: 100%;
+    }
+    .play-controller-component {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: minmax(23.2rem, max-content) 1fr auto;
+        height: 100%;
+        overflow: hidden;
+    }
+    .bot-speech-multiple-messages-component.bot-speech-multiple-messages-withPadding {
+        padding: var(--space-400) var(--space-400) var(--space-300);
+    }
+    .play-controller-messages {
+        max-height: 23.2rem;
+        min-height: 23.2rem;
+    }
+    .bot-speech-multiple-messages-component {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+    .play-controller-moves-container {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .play-controller-scrollable {
+        overflow: auto;
+    }
+    .eco-opening-panel {
+        align-items: center;
+        border-bottom: 0.1rem solid var(--color-border-default);
+        border-top: 0.1rem solid var(--color-border-default);
+        color: var(--color-text-default);
+        display: flex;
+        flex-shrink: 0;
+        height: 4rem;
+        justify-content: space-between;
+        .eco-opening-name {
+            display: inline-block;
+            font-size: 1.3rem;
+            line-height: 2rem;
+            overflow: hidden;
+            padding-left: 1.6rem;
+            padding-right: 1rem;
+            position: relative;
+            text-decoration: none;
+            text-overflow: ellipsis;
+            white-space: pre;
+        }
+        .eco-opening-links {
+            align-items: center;
+            display: flex;
+            flex-shrink: 0;
+            gap: 0.5rem;
+            padding-right: 1rem;
+        }
+    }
+    .chessboard-pkg-move-list-component {
+        --timeBarMaxWidth: 45px;
+        --timeMaxValue: 0;
+        --whiteNodeSpace: 4rem;
+        --blackNodeSpace: 14rem;
+        color: var(--color-text-subtle);
+        font-size: 13px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        .main-line-row {
+            box-sizing: border-box;
+            font-weight: 600;
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+            padding: 0 15px 0 15px;
+            position: relative;
+            width: 100%;
+        }
+        .main-line-ply.white-move {
+            left: var(--whiteNodeSpace);
+        }
+        .main-line-ply.black-move {
+            left: var(--blackNodeSpace);
+        }
+        [data-node]:not(.selected) {
+            cursor: pointer;
+        }
+        .main-line-row .node {
+            font-weight: 700;
+        }
+        .main-line-ply {
+            position: absolute;
+            white-space: nowrap;
+        }
+        .node {
+            display: inline-block;
+        }
+        .icon-font-chess {
+            display: inline-block;
+            font-size: 2.3rem;
+            margin-right: 0.1rem;
+            margin-top: -0.3rem;
+        }
+    }
+    .game-controls-controller-component {
+        align-self: flex-end;
+        background-color: var(--color-bg-tertiary);
+        padding: 0 var(--space-300) var(--space-200);
+        width: 100%;
+    }
+    .primary-controls-topControls {
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 0.4rem;
+        grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+        padding: var(--space-400) var(--space-200) 0;
+        width: 100%;
+    }
+    .dark-mode .cc-button-secondary {
+        --buttonTextShadow: var(--color-transparent-black-10);
+    }
+    .small-controls-smallControls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: var(--space-75);
+        padding: var(--space-200) var(--space-200) 0;
+    }
+    .small-controls-leftIcons {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+    .small-controls-btn {
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        color: var(--color-text-default);
+        display: flex;
+        gap: 0.4rem;
+        justify-content: center;
+        margin: 0;
+        min-height: 3rem;
+        min-width: 3rem;
+        padding: 0;
+    }
+    .small-controls-rightIcons {
+        align-items: center;
+        display: flex;
     }
 }
