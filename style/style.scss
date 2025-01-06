@@ -390,19 +390,6 @@ h1 {
     position: relative;
     width: min-content;
     align-self: center;
-    .board {
-        height: 1184px;
-        width: 1184px;
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 1fr);
-        & > .black {
-            background-color: #739552;
-        }
-        & > .white {
-            background-color: #ebecd0;
-        }
-    }
     .board-layout-player {
         flex-shrink: 0;
         height: var(--playerHeight);
