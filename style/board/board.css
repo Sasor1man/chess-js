@@ -1,9 +1,14 @@
+.game {
+  height: 1200px;
+  width: 1200px;
+  position: relative;
+}
+
 .board {
-  height: 1184px;
-  width: 1184px;
+  height: inherit;
+  width: inherit;
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
+  border-radius: 3px;
 }
 .board > .black {
   background-color: #739552;
@@ -23,6 +28,18 @@
   height: 45px;
   scale: 3;
 }
+.board .black.highlight {
+  background-color: #b9ca43;
+}
+.board .white.highlight {
+  background-color: #f5f682;
+}
+.board .black.lmc {
+  background-color: #d36c50;
+}
+.board .white.lmc {
+  background-color: #eb7d6a;
+}
 
 .draggble {
   cursor: grab;
@@ -30,4 +47,26 @@
 
 .dragging {
   cursor: grabbing;
+}
+
+.pieces {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  top: 0;
+}
+
+.piece {
+  background-size: 100%;
+  cursor: pointer;
+  cursor: grab;
+  cursor: -webkit-grab;
+  height: 150px;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  touch-action: none;
+  width: 150px;
+  will-change: transform;
 }/*# sourceMappingURL=board.css.map */
