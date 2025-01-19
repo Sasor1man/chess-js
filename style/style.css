@@ -637,4 +637,24 @@ h1 {
 .board-layout-sidebar .small-controls-rightIcons {
   align-items: center;
   display: flex;
+}
+
+.moves {
+  display: flex;
+  flex-wrap: wrap;
+}
+.moves div {
+  width: 33%;
+  height: 40px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.moves div:nth-child(3n+3) {
+  width: 70%;
+}
+.moves div:nth-child(3n+2) {
+  width: 20%;
+}
+.moves div:nth-child(3n+1) {
+  width: 10%;
 }/*# sourceMappingURL=style.css.map */

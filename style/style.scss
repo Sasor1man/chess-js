@@ -180,8 +180,8 @@ h1 {
             var(--sidebarMaxWidth)
         );
     grid-template-rows: [top] var(--boardRowHeight) [bottom] auto;
-    gap: 50px;
     // grid-template-rows: 1fr;
+    gap: 50px;
 }
 
 .board-layout-nav {
@@ -677,5 +677,27 @@ h1 {
     .small-controls-rightIcons {
         align-items: center;
         display: flex;
+    }
+}
+
+.moves {
+    display: flex;
+    flex-wrap: wrap;
+    div {
+        width: 33%;
+        height: 40px;
+        padding-left: 10px;
+        padding-top: 10px;
+        &:nth-child(3n + 3) {
+            width: 70%;
+        }
+
+        &:nth-child(3n + 2) {
+            width: 20%;
+        }
+
+        &:nth-child(3n + 1) {
+            width: 10%;
+        }
     }
 }

@@ -69,6 +69,7 @@
 .dragging-4a6c1 {
   position: fixed;
   transform: translate(-50%, -50%);
+  z-index: 3;
 }
 
 .piece-349f8 {
@@ -175,10 +176,10 @@
 .board .white-3b784.highlight {
   background-color: #f5f682;
 }
-.board .black.lmc {
+.board .black-b7cb6.lmc {
   background-color: #d36c50;
 }
-.board .white.lmc {
+.board .white-3b784.lmc {
   background-color: #eb7d6a;
 }
 
@@ -188,6 +189,14 @@
 
 .dragging {
   cursor: grabbing;
+}
+
+.hide-piece {
+  z-index: 2;
+}
+
+.hide-draggin {
+  display: none;
 }
 
 .dot {
@@ -217,7 +226,14 @@
   position: absolute;
 }
 
-.highlight1-32417,
-.highlight2-9c5d2 {
+.highlight1 {
   box-shadow: inset 0px 0px 5px 5px rgba(255, 255, 255, 0.65);
+}
+
+.move.board-layout-top {
+  translate: 0 3100%;
+}
+
+.move.board-layout-bottom {
+  translate: 0 -3100%;
 }/*# sourceMappingURL=board.css.map */
