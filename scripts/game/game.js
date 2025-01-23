@@ -8,13 +8,24 @@ const status = document.getElementById('status');
 const resignBtn = document.getElementById('resign');
 const whiteOrietation = document.querySelector('[aria-label="Move Back"]');
 const blackOrietation = document.querySelector('[aria-label="Move Forward"]');
-const playerDiv = document.getElementsByClassName('board-layout-player')
+const playerDiv = document.getElementsByClassName('board-layout-player');
+
 let isDraggin;
 let rightMouse;
 let rightMouseStart;
 
-function isWhitePiece(piece) { return /^w/.test(piece) }
-function isBlackPiece(piece) { return /^b/.test(piece) }
+let currentSquare;
+
+function isWhitePiece(piece) { return !(/^b/.test(piece)) }
+function isBlackPiece(piece) { return !(/^w/.test(piece)) }
+
+const isMobile = () => {
+    return (navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile']).then(data => {
+        if (data.mobile) {
+            return true
+        }
+    }))
+}
 
 const addMove = (move) => {
     const moveArr = move.split(' ')
@@ -55,7 +66,36 @@ resignBtn.addEventListener('click', e => {
     updateStatus()
 })
 
+const canMove = (square) => {
+    const $square = document.querySelector(`[data-square-coord="${square}"]`);
+    return $square.children[0]?.classList.contains('hint')
+}
 
+const makeMove = (from, to) => {
+    const move = game.move({
+        from: from,
+        to: to,
+        promotion: 'q' // TODO: make piece choice
+    });
+    if (move === null) return 'snapback';
+    removeHighlight();
+    $(`#board [data-square-coord="${from}"]`).addClass('highlight');
+    $(`#board [data-square-coord="${to}"]`).addClass('highlight');
+    if (move) {
+        board.fen(game.fen(), () => {
+            updateStatus()
+        })
+    } else {
+        return 'snapback'
+    }
+    isDraggin = false;
+    board.flip();
+    Array.from(playerDiv).forEach(e => {
+        e.classList.toggle('move')
+    });
+    removeHints();
+    showPiece();
+}
 
 const removeLmc = () => Array.from($('#board .lmc')).forEach(e => e.classList.remove('lmc'));
 
@@ -83,29 +123,9 @@ const removeHints = () => {
 
 const onDrop = (dropEvt) => {
     showPiece();
-    removeHints();
+
     if (isDraggin) {
-        const move = game.move({
-            from: dropEvt.source,
-            to: dropEvt.target,
-            promotion: 'q' // TODO: make piece choice
-        });
-        if (move === null) return 'snapback';
-        removeHighlight();
-        $(`#board [data-square-coord="${dropEvt.source}"]`).addClass('highlight');
-        $(`#board [data-square-coord="${dropEvt.target}"]`).addClass('highlight');
-        if (move) {
-            board.fen(game.fen(), () => {
-                updateStatus()
-            })
-        } else {
-            return 'snapback'
-        }
-        isDraggin = false
-        board.flip();
-        Array.from(playerDiv).forEach(e => {
-            e.classList.toggle('move')
-        });
+        makeMove(dropEvt.source, dropEvt.target)
     }
     return 'snapback'
 
@@ -128,31 +148,42 @@ const rightClick = (evt, domEvt) => {
     rightMouseStart = evt.square
 }
 
-const leftClick = (evt, domEvt) => {
+const leftClick = (evt) => {
     removeLmc();
     board.clearArrows();
+    document.querySelector(`[data-square-coord="${evt.square}"]`).classList.add('hide-piece');
+
     if (game.game_over()) return false;
 
     if (game.turn() === 'w' && !isWhitePiece(evt.piece)) return false
     if (game.turn() === 'b' && !isBlackPiece(evt.piece)) return false
 
-    document.querySelector(`[data-square-coord="${evt.square}"]`).classList.add('hide-piece');
     isDraggin = true;
-
+    if (evt.piece) {
+        currentSquare = evt.square;
+    }
     const legalMoves = game.moves({
         square: evt.square,
         verbose: true
     })
-    if (legalMoves.length === 0) return;
+    // if (legalMoves.length === 0) return;
+
+    if ((evt.piece == null) && canMove(evt.square)) {
+        makeMove(currentSquare, evt.square)
+    }
+    removeHints()
 
     legalMoves.forEach((move) => {
         addHints(move, evt.position)
     })
+
+}
+
+const onDragStart = (dragStartEvt) => {
+    if (isMobile()) leftClick(dragStartEvt)
 }
 
 const onMousedownSquare = (evt, domEvt) => {
-    // console.log(evt)
-    // console.log(domEvt)
     if (domEvt.button === 2) {
         return rightClick(evt, domEvt)
     }
@@ -162,7 +193,7 @@ const onMousedownSquare = (evt, domEvt) => {
 const onMouseupSquare = (evt, domEvt) => {
     if (rightMouse && rightMouseStart) {
         if (evt.square === rightMouseStart) {
-            const current = document.querySelector(`[data-square-coord="${evt.square}"]`);
+            const current = document.querySelector(`[data-square-coord= "${evt.square}"]`);
             current.classList.contains('lmc') ? current.classList.remove('lmc') : current.classList.add('lmc');
             rightMouseStart = null;
         }
@@ -177,15 +208,17 @@ const onMouseupSquare = (evt, domEvt) => {
 }
 
 const onMouseenterSquare = (evt, domEvt) => {
+    // console.log(1)
     if (isDraggin) {
-        document.querySelector(`[data-square-coord="${evt.square}"]`).classList.add('highlight1')
-        document.querySelector(`[data-square-coord="${evt.fromSquare}"]`)?.classList.remove('highlight1')
+        // document.querySelector(`[data-square-coord= "${evt.square}"]`).classList.add('highlight1')
+        // document.querySelector(`[data-square-сoord= "${evt.fromSquare}"]`)?.classList.remove('highlight1')
+        console.log(2)
     }
 }
 
 
 const config = {
-    pieceTheme: `pieces/oi1/{piece}.png`,
+    pieceTheme: `pieces / oi1 / { piece }.png`,
     draggable: true,
     position: 'start',
     onDrop,
@@ -194,6 +227,7 @@ const config = {
     onMousedownSquare,
     onMouseupSquare,
     // onMouseenterSquare,
+    onDragStart,
 }
 const board = Chessboard2(boardDiv, config);
 
@@ -214,3 +248,8 @@ boardDiv.addEventListener('contextmenu', e => {
     e.preventDefault();
 })
 
+boardDiv.addEventListener('touchend', e => {
+    console.log(e.target)
+    const hit = e.target.closest('div');
+    console.log(hit)
+})
