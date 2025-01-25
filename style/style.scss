@@ -15,6 +15,9 @@
     --color-transparent-white-85: hsla(0, 0%, 100%, 0.85);
     --color-transparent-white-10: hsla(0, 0%, 100%, 0.1);
     --color-transparent-white-14: hsla(0, 0%, 100%, 0.14);
+    --color-green-500: #45753c;
+    --color-green-400: #5d9948;
+    --color-green-300: #81b64c;
     --borderColor: hsla(0, 0%, 100%, 0.1);
     --borderFocus: hsla(0, 0%, 100%, 0.3);
     --bgColor: hsla(0, 0%, 100%, 0.1);
@@ -115,6 +118,52 @@ h1 {
     --buttonPaddings: 0.4rem 2rem;
     --columnGap: 0.8rem;
     --fontSize: 1.6rem;
+}
+
+.cc-button-xx-large {
+    --borderRadius: 1rem;
+    --borderHeight: 0.4rem;
+    --buttonBoxShadow: 0 0 0.8rem transparent, 0 0 1.6rem transparent, inset 0 -0.8rem 2.4rem transparent,
+        inset 0 calc(var(--borderHeight, 0.1rem) * -1) 0 0 var(--borderBottomLine);
+    --buttonBoxShadowHover: 0 0 0.8rem var(--outlineBoxShadow), 0 0 1.6rem var(--outlineBoxShadow),
+        inset 0 -0.8rem 2.4rem var(--innerBoxShadow),
+        inset 0 calc(var(--borderHeight, 0.1rem) * -1) 0 0 var(--borderBottomLineHover);
+    --buttonHeight: 6.4rem;
+    --buttonPaddings: 0 2.4rem var(--borderHeight);
+    --columnGap: 0.8rem;
+    --fontSize: 2.2rem;
+    --fontWeight: 800;
+    font-family: var(--font-family-heading);
+}
+
+.cc-feature-button-component {
+    background-color: var(--color-bg-secondary-alt);
+    border: 0;
+    border-radius: var(--radius-l);
+    box-shadow: inset 0 -0.2rem 0 0 var(--color-transparent-black-30);
+    color: var(--color-text-boldest);
+    -moz-column-gap: var(--feature-button-gap, var(--space-200));
+    column-gap: var(--feature-button-gap, var(--space-200));
+    display: var(--feature-button-display, flex);
+    justify-content: center;
+    padding: var(--feature-button-padding);
+    width: 100%;
+    word-break: break-word;
+}
+
+.cc-feature-button-primary-centered {
+    --feature-button-icon-size: var(--icon-xxl);
+    --feature-button-padding: var(--space-200) var(--space-400);
+    align-items: center;
+}
+
+.cc-button-primary {
+    --bgColor: var(--color-green-300);
+    --bgColorHover: #a3d160;
+    --borderBottomLine: var(--color-green-400);
+    --borderBottomLineHover: var(--color-green-300);
+    --innerBoxShadow: rgba(69, 117, 60, 0.25);
+    --outlineBoxShadow: rgba(93, 153, 72, 0.2);
 }
 
 .cc-button-secondary {
@@ -700,4 +749,14 @@ h1 {
             width: 10%;
         }
     }
+}
+
+.mode-pick {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
 }
