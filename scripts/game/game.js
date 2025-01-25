@@ -20,10 +20,13 @@ export function game() {
     let currentSquare;
 
     let myColor;
+    let socket;
 
-    if (mode === 'online') {
-        const socket = new WebSocket('ws://localhost:8080');
+    const currentPosition = sessionStorage.getItem('currentPosition')
 
+    const randomColor = () => {
+        const num = Math.random() * 2;
+        return num % 2 === 0 ? 'w' : 'b'
     }
 
     function isWhitePiece(piece) { return !(/^b/.test(piece)) }
@@ -44,6 +47,8 @@ export function game() {
         const result = moveArr.map(item => `<div>${item}</div>`).join('');
         moveList.innerHTML = result
     }
+
+
 
     const updateStatus = () => {
         let statusHTML = ''
@@ -68,9 +73,15 @@ export function game() {
             statusHTML = 'Game is drawn by fifty-move rule.'
         }
 
+        if (game.game_over()) {
+            sessionStorage.clear()
+        }
+
         status.innerHTML = statusHTML;
         addMove(game.pgn())
+
     }
+
 
     resignBtn.addEventListener('click', e => {
         game.game_over = () => true;
@@ -101,12 +112,24 @@ export function game() {
             return 'snapback'
         }
         isDraggin = false;
-        board.flip();
-        Array.from(playerDiv).forEach(e => {
-            e.classList.toggle('move')
-        });
+        if (mode === 'offline') {
+            board.flip();
+            Array.from(playerDiv).forEach(e => {
+                e.classList.toggle('move')
+            });
+        }
         removeHints();
         showPiece();
+        if (mode === 'online') {
+            let output = {
+                'color': myColor,
+                'from': from,
+                'to': to,
+                'current': game.fen(),
+                'pgn': game.pgn()
+            }
+            socket.send(JSON.stringify(output))
+        }
     }
 
     const removeLmc = () => Array.from($('#board .lmc')).forEach(e => e.classList.remove('lmc'));
@@ -160,6 +183,30 @@ export function game() {
         rightMouseStart = evt.square
     }
 
+    const offlineCheck = (evt) => {
+        if (game.turn() === 'w' && !isWhitePiece(evt.piece)) return false
+        if (game.turn() === 'b' && !isBlackPiece(evt.piece)) return false
+        return true
+    }
+
+    const onlineCheck = () => {
+        return (game.turn() === myColor)
+    }
+
+    const validateMove = (evt) => {
+        if (game.game_over()) return false;
+
+        switch (mode) {
+            case 'offline':
+                return offlineCheck(evt);
+            case 'online':
+                return onlineCheck();
+            default:
+                console.error(`Неизвестный режим: ${mode}`);
+                return false;
+        }
+    }
+
     const leftClick = (evt) => {
         removeLmc();
         board.clearArrows();
@@ -167,8 +214,7 @@ export function game() {
 
         if (game.game_over()) return false;
 
-        if (game.turn() === 'w' && !isWhitePiece(evt.piece)) return false
-        if (game.turn() === 'b' && !isBlackPiece(evt.piece)) return false
+        if (!validateMove(evt)) return;
 
         isDraggin = true;
         if (evt.piece) {
@@ -231,7 +277,7 @@ export function game() {
     const config = {
         pieceTheme: `pieces / oi1 / { piece }.png`,
         draggable: true,
-        position: 'start',
+        position: currentPosition || 'start',
         onDrop,
         onMoveEnd,
         onSnapbackEnd,
@@ -241,6 +287,7 @@ export function game() {
         onDragStart,
     }
     const board = Chessboard2(boardDiv, config);
+    if (currentPosition) game.load(currentPosition)
 
     whiteOrietation.addEventListener('click', () => {
         board.orientation('white');
@@ -264,4 +311,23 @@ export function game() {
         window.location.hash = 'main';
 
     })
+
+    if (mode === 'online') {
+        socket = new WebSocket('ws://localhost:8080');
+        myColor = sessionStorage.getItem('myColor') || randomColor();
+        sessionStorage.setItem('myColor', myColor);
+        if (myColor === 'b') board.flip()
+
+        socket.onmessage = (event) => {
+            console.log(event)
+            let unParsedMove = JSON.parse(event.data);
+            makeMove(unParsedMove.from, unParsedMove.to)
+            sessionStorage.setItem('currentPosition', unParsedMove.current)
+            unParsedMove.color === 'w' ? sessionStorage.setItem('myColor', 'b') : sessionStorage.setItem('myColor', 'w');
+
+            updateStatus()
+        }
+
+    }
+
 }
