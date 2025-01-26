@@ -790,6 +790,9 @@ h1 {
     transform: scale(0.8);
     left: calc(50% - 480px);
   }
+  .board-layout-sidebar {
+    translate: 0 -343px;
+  }
 }
 @media ((max-width: 1150px)) {
   .board-layout-main {

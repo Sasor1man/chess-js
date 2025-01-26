@@ -36,15 +36,18 @@ export function game() {
     function isWhitePiece(piece) { return !(/^b/.test(piece)) }
     function isBlackPiece(piece) { return !(/^w/.test(piece)) }
 
-    const isMobile = () => {
-        let result;
-        navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile']).then(data => {
+    const isMobile = async () => {
+        let result = false;
+        try {
+            const data = await navigator.userAgentData.getHighEntropyValues(['platform', 'model', 'mobile']);
             if (data.mobile) {
-                result = true
+                result = true;
             }
-        })
-        return result
-    }
+        } catch (e) {
+            console.error('Error checking mobile device:', e);
+        }
+        return result;
+    };
 
     const addMove = () => {
         const move = game.pgn()
@@ -239,7 +242,11 @@ export function game() {
     }
 
     const onDragStart = (dragStartEvt) => {
-        if (isMobile()) leftClick(dragStartEvt)
+        if (isMobile()) {
+            isMobile().then(result => {
+                leftClick(dragStartEvt)
+            });
+        }
     }
 
     const onMousedownSquare = (evt, domEvt) => {
@@ -413,13 +420,13 @@ export function game() {
         }
     });
 
-    // const deleteStyle = () => {
-    //     const element = document.querySelector(`[id^="container-"]`);
-    //     if (window.innerWidth < 1310) {
-    //         element.removeAttribute('style');
-    //     }
+    const adjustElementStyle = () => {
+        const element = document.querySelector('[id^="container-"]');
+        if (window.innerWidth < 1150) {
+            element.style.alignSelf = 'center';
+        }
+    };
 
-    // }
-
-    // window.addEventListener('resize', deleteStyle);
+    // Слушаем изменение размера экрана
+    window.addEventListener('resize', adjustElementStyle);
 }
