@@ -427,6 +427,5 @@ export function game() {
         }
     };
 
-    // Слушаем изменение размера экрана
     window.addEventListener('resize', adjustElementStyle);
 }
