@@ -596,6 +596,8 @@ h1 {
         display: flex;
         flex-direction: column;
         overflow: auto;
+        align-items: center;
+        justify-content: center;
     }
     .play-controller-moves-container {
         display: flex;
@@ -751,6 +753,10 @@ h1 {
     }
 }
 
+.nav-back {
+    translate: 0 0;
+}
+
 .mode-pick {
     width: 100vw;
     height: 100vh;
@@ -759,4 +765,83 @@ h1 {
     align-items: center;
     flex-direction: column;
     gap: 10px;
+}
+
+.burger {
+    display: none;
+}
+
+@media ((max-width: 1750px)) {
+    .content {
+        gap: 10px;
+    }
+}
+
+@media ((max-width: 1666px)) {
+    .content {
+        height: auto;
+        width: 100%;
+        grid-template-columns: [left-gutter] var(--navWidth) [board-layout] min-content [sidebar];
+    }
+    .board-layout-sidebar {
+        grid-column: 1 / -1;
+    }
+}
+
+@media ((max-width: 1375px)) {
+    .content {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        // align-items: center;
+    }
+    .board-layout-nav {
+        position: fixed;
+        width: var(--navWidth);
+        translate: -100% 0;
+    }
+    .board-layout-main {
+        margin-top: 10px;
+    }
+    .burger {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        align-self: flex-start;
+        & > svg {
+            width: 50px;
+            height: 50px;
+            color: white;
+        }
+    }
+    .nav-back {
+        translate: 0% 0%;
+    }
+}
+
+@media ((max-width: 1310px)) {
+    .board-layout-main {
+        margin-top: 50px;
+        transform-origin: top;
+        transform: scale(0.9);
+    }
+}
+
+@media ((max-width: 1150px)) {
+    .content {
+        overflow: hidden;
+    }
+    .board-layout-main {
+        margin-top: 50px;
+        overflow: hidden;
+        position: relative;
+        transform: scale(0.8);
+        left: calc(calc(50% - 480px));
+    }
+}
+
+@media ((max-width: 1150px)) {
+    .board-layout-main {
+        transform: scale(0.7);
+    }
 }

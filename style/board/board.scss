@@ -118,6 +118,8 @@
     height: 1200px;
     width: 1200px;
     position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .board {
@@ -206,9 +208,9 @@
 }
 
 .move.board-layout-top {
-    translate: 0 3100%;
+    translate: 0 3148%;
 }
 
 .move.board-layout-bottom {
-    translate: 0 -3100%;
+    translate: 0 -3148%;
 }

@@ -12,6 +12,8 @@ export function game() {
     const blackOrietation = document.querySelector('[aria-label="Move Forward"]');
     const playerDiv = document.getElementsByClassName('board-layout-player');
     const mainButton = document.getElementById('mainButton');
+    const spinnerDiv = document.getElementById('spinner');
+    const burger = document.getElementById('burger');
 
     let isDraggin;
     let rightMouse;
@@ -22,12 +24,14 @@ export function game() {
     let myColor;
     let socket;
 
-    const currentPosition = sessionStorage.getItem('currentPosition')
 
-    const randomColor = () => {
-        const num = Math.random() * 2;
-        return num % 2 === 0 ? 'w' : 'b'
+    let clientId = localStorage.getItem('clientId');
+    if (!clientId) {
+        clientId = crypto.randomUUID();
+        localStorage.setItem('clientId', clientId);
     }
+
+    if (mode === 'offline') spinnerDiv.style.display = 'none'
 
     function isWhitePiece(piece) { return !(/^b/.test(piece)) }
     function isBlackPiece(piece) { return !(/^w/.test(piece)) }
@@ -42,7 +46,8 @@ export function game() {
         return result
     }
 
-    const addMove = (move) => {
+    const addMove = () => {
+        const move = game.pgn()
         const moveArr = move.split(' ')
         const result = moveArr.map(item => `<div>${item}</div>`).join('');
         moveList.innerHTML = result
@@ -73,21 +78,16 @@ export function game() {
             statusHTML = 'Game is drawn by fifty-move rule.'
         }
 
-        if (game.game_over()) {
-            sessionStorage.clear()
+        if (game.game_over() && mode === 'online') {
+            localStorage.clear()
+            if (!status.innerHTML.includes('resign')) statusHTML = 'Opponent resigned'
         }
 
+
         status.innerHTML = statusHTML;
-        addMove(game.pgn())
+        addMove()
 
     }
-
-
-    resignBtn.addEventListener('click', e => {
-        game.game_over = () => true;
-        game.in_checkmate = () => true;
-        updateStatus()
-    })
 
     const canMove = (square) => {
         const $square = document.querySelector(`[data-square-coord="${square}"]`);
@@ -122,13 +122,14 @@ export function game() {
         showPiece();
         if (mode === 'online') {
             let output = {
-                'color': myColor,
+                'type': 'move',
                 'from': from,
                 'to': to,
                 'current': game.fen(),
                 'pgn': game.pgn()
             }
             socket.send(JSON.stringify(output))
+            localStorage.setItem('currentPosition', output.current);
         }
     }
 
@@ -277,7 +278,7 @@ export function game() {
     const config = {
         pieceTheme: `pieces / oi1 / { piece }.png`,
         draggable: true,
-        position: currentPosition || 'start',
+        position: 'start',
         onDrop,
         onMoveEnd,
         onSnapbackEnd,
@@ -286,20 +287,83 @@ export function game() {
         // onMouseenterSquare,
         onDragStart,
     }
+
+
+    if (mode === 'online') {
+        socket = new WebSocket('ws://localhost:8080');
+
+        socket.onopen = () => {
+            console.log('Connected');
+            socket.send(JSON.stringify({ type: 'reconnect', clientId }));
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log('message', message);
+
+            switch (message.type) {
+                case 'game_move':
+                    console.log(message);
+                    const move = message.data;
+                    localStorage.setItem('currentPosition', move.current);
+                    makeMove(move.from, move.to);
+                    updateStatus();
+                    break;
+                case 'reassign':
+                    myColor = localStorage.getItem('color')
+                    const position = localStorage.getItem('currentPosition');
+                    if (myColor === 'b') board.flip()
+                    if (position) board.fen(position);
+                    if (position) game.load(position);
+                    updateStatus();
+                    console.log('message.role', message.role);
+                    break;
+                case "game_start":
+                    game.reset();
+                    board.position = 'start';
+                    board.start();
+                    removeHighlight();
+                    localStorage.removeItem('currentPosition');
+                    myColor = message.color;
+                    localStorage.setItem('color', myColor);
+                    if (message.color === 'b') board.flip();
+                    spinnerDiv.style.display = 'none'
+                    break;
+                case 'resign':
+                    game.game_over = () => true;
+                    updateStatus();
+                    break;
+
+            }
+
+        }
+
+        socket.onclose = () => {
+            console.log('Соединение закрыто');
+            localStorage.clear()
+        };
+
+    }
+
     const board = Chessboard2(boardDiv, config);
-    if (currentPosition) game.load(currentPosition)
+
 
     whiteOrietation.addEventListener('click', () => {
-        board.orientation('white');
-        Array.from(playerDiv).forEach(e => {
-            if (e.classList.contains('move')) e.classList.remove('move')
-        })
+        if (mode !== 'online') {
+            board.orientation('white');
+            Array.from(playerDiv).forEach(e => {
+                if (e.classList.contains('move')) e.classList.remove('move')
+            })
+        }
     });
     blackOrietation.addEventListener('click', () => {
-        board.orientation('black');
-        Array.from(playerDiv).forEach(e => {
-            if (!e.classList.contains('move')) e.classList.add('move')
-        })
+        if (mode !== 'online') {
+            board.orientation('black');
+            Array.from(playerDiv).forEach(e => {
+                if (!e.classList.contains('move')) e.classList.add('move')
+            })
+        }
+
     });
 
     boardDiv.addEventListener('contextmenu', e => {
@@ -312,22 +376,50 @@ export function game() {
 
     })
 
-    if (mode === 'online') {
-        socket = new WebSocket('ws://localhost:8080');
-        myColor = sessionStorage.getItem('myColor') || randomColor();
-        sessionStorage.setItem('myColor', myColor);
-        if (myColor === 'b') board.flip()
-
-        socket.onmessage = (event) => {
-            console.log(event)
-            let unParsedMove = JSON.parse(event.data);
-            makeMove(unParsedMove.from, unParsedMove.to)
-            sessionStorage.setItem('currentPosition', unParsedMove.current)
-            unParsedMove.color === 'w' ? sessionStorage.setItem('myColor', 'b') : sessionStorage.setItem('myColor', 'w');
-
-            updateStatus()
+    resignBtn.addEventListener('click', e => {
+        game.game_over = () => true;
+        game.in_checkmate = () => true;
+        if (mode === 'online') {
+            let output = {
+                'type': 'resign',
+                'current': game.fen(),
+                'pgn': game.pgn()
+            }
+            socket.send(JSON.stringify(output));
         }
+        updateStatus()
+        const currentColor = myColor === 'w' ? 'White' : 'Black'
+        status.innerHTML = `${currentColor} resigned`
+    })
 
-    }
+    burger.addEventListener('click', () => {
+        const nav = document.querySelector('.board-layout-nav');
+        if (nav) nav.classList.add('nav-back');
+    });
 
+    window.addEventListener('click', (e) => {
+        const nav = document.querySelector('.board-layout-nav');
+        const burger = document.querySelector('#burger');
+
+        if (!nav || !nav.classList.contains('nav-back')) return;
+
+        const path = e.composedPath();
+        console.log(path);
+
+        const isInsideNav = path.some(el => el === nav || el === burger);
+
+        if (!isInsideNav) {
+            nav.classList.remove('nav-back');
+        }
+    });
+
+    // const deleteStyle = () => {
+    //     const element = document.querySelector(`[id^="container-"]`);
+    //     if (window.innerWidth < 1310) {
+    //         element.removeAttribute('style');
+    //     }
+
+    // }
+
+    // window.addEventListener('resize', deleteStyle);
 }

@@ -2,6 +2,14 @@ import { game } from '../game/game.js';
 import { main } from './main.js'
 
 const gameDiv = ` <div class="content">
+<div class="burger" id="burger">
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 18L20 18" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+<path d="M4 12L20 12" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+<path d="M4 6L20 6" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+</svg>
+</div>
 <div class="board-layout-nav">
     <div class="nav-component">
         <div class="nav-top-menu">
@@ -182,6 +190,9 @@ const gameDiv = ` <div class="content">
         <div class="play-controller-component sidebar-controller-component">
             <div
                 class="bot-speech-multiple-messages-component bot-speech-multiple-messages-withPadding play-controller-messages">
+                <div class="spinner-border" role="status" id="spinner">
+  <span class="visually-hidden">Loading...</span>
+</div>
             </div>
             <div class="play-controller-moves-container">
                 <div class="play-controller-scrollable">
