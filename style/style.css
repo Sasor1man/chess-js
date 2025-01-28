@@ -214,6 +214,7 @@ h1 {
   grid-template-columns: [left-gutter] var(--navWidth) [board-layout] min-content [sidebar] minmax(var(--sidebarMinWidth), var(--sidebarMaxWidth));
   grid-template-rows: [top] var(--boardRowHeight) [bottom] auto;
   gap: 50px;
+  overflow-x: hidden;
 }
 
 .board-layout-nav {
@@ -754,6 +755,7 @@ h1 {
     position: fixed;
     width: var(--navWidth);
     translate: -100% 0;
+    transition: all 0.3s;
   }
   .board-layout-main {
     margin-top: 10px;
@@ -791,9 +793,6 @@ h1 {
   .move.board-layout-bottom {
     translate: 0 -2844%;
   }
-  .board-layout-bottom {
-    translate: 0 -300%;
-  }
 }
 @media ((max-width: 1150px)) {
   .content {
@@ -805,8 +804,7 @@ h1 {
     position: relative;
     transform: scale(0.8);
     height: 1172px;
-    width: 961px;
-    left: calc(50% - 480px);
+    width: 70rem;
   }
   .move.board-layout-top#board-layout-player-top {
     translate: 0 2541%;
@@ -814,19 +812,11 @@ h1 {
   .move.board-layout-bottom {
     translate: 0 -2844%;
   }
-  .board-layout-bottom {
-    translate: 0 -606%;
-  }
 }
 @media ((max-width: 762px)) {
   .board-layout-main {
     transform: scale(0.7);
     height: 1060px;
-    width: 840px;
-    left: calc(50% - 432px);
-  }
-  .board-layout-bottom {
-    translate: 0 -894%;
   }
   .move.board-layout-top#board-layout-player-top {
     translate: 0 2241%;

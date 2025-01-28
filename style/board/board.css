@@ -141,8 +141,7 @@
 }
 
 .game {
-  height: 1200px;
-  width: 1200px;
+  width: 80rem;
   position: relative;
   margin-top: 10px;
   margin-bottom: 10px;
